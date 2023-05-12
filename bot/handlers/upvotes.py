@@ -47,13 +47,13 @@ def upvote(update: Update, context: CallbackContext) -> None:
 
 
 def upvote_comment(update: Update, context: CallbackContext) -> None:
-    user = get_club_user(update)
-    if not user:
-        return None
-
     _, comment_id = update.callback_query.data.split(":", 1)
     comment = Comment.objects.filter(id=comment_id).select_related("post").first()
     if not comment:
+        return None
+    
+    user = get_club_user(update)
+    if not user:
         return None
 
     _, is_created = CommentVote.upvote(
